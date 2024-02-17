@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Date of Birth Form</title>
+	<title>Geological Periods</title>
 
 	<style type="text/css">
 
@@ -78,11 +78,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </head>
 <body>
 
-<form method = "post" action="http://localhost/Tut3/index.php/dob_controller/form">
-	<label>Enter your date of birth : </label>
-	<input name='dateOfBirth' type="date">
-	<input type="submit">
-</form>
+<a href="<?= site_url('geological_periods_controller/getInfo/Triassic') ?>"><h1>Triassic</h1></a>
+<a href="<?= site_url('geological_periods_controller/getInfo/Jurassic') ?>"><h1>Jurassic</h1></a>
+<a href="<?= site_url('geological_periods_controller/getInfo/Cretaceous') ?>"><h1>Cretaceous</h1></a>
+
+<?php if (isset($info)) {
+	echo $info;
+} ?>
 
 </body>
 </html>
