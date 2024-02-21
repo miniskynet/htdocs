@@ -11,6 +11,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		::selection { background-color: #E13300; color: white; }
 		::-moz-selection { background-color: #E13300; color: white; }
 
+		table, th, td {
+			border: 1px solid black;
+			border-collapse: collapse;
+			padding: 10px;
+		}
+
 		body {
 			background-color: #fff;
 			margin: 40px;
@@ -82,9 +88,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <a href="<?= site_url('geological_periods_controller/getInfo/Jurassic') ?>"><h1>Jurassic</h1></a>
 <a href="<?= site_url('geological_periods_controller/getInfo/Cretaceous') ?>"><h1>Cretaceous</h1></a>
 
-<?php if (isset($info)) {
-	echo $info;
-} ?>
+<table>
+
+	<tr>
+	<th>Period</th>
+	<th>Land Animals</th>
+	<th>Marine Animals</th>
+	<th>Avian Animals</th>
+	<th>Plant Life</th>
+	</tr>
+
+	<tr>
+		<td><?= $info['period']?></td>
+		<td><?= $info['landAnimals']?></td>
+		<td><?= $info['marineAnimals']?></td>
+		<td><?= $info['avianAnimals']?></td>
+		<td><?= $info['plantLife']?></td>
+	</tr>
+
+	<tr
+
+</table>
 
 </body>
 </html>
