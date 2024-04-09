@@ -86,7 +86,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 <div id="container">
-	<button id="welcome_button">Click Me!</button>
+	<button class="welcome_buttons" id="welcome_button">Click Me!</button><br><br>
+	<button class="welcome_buttons" id="welcome_button_two">Click Me too!</button><br><br>
+	<button class="welcome_buttons" id="welcome_button_three">Click Me as well!</button>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script>
@@ -94,15 +96,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	$(document).ready(function (){
 
 		// jquery callback function for click events on the button
-
 		$('#welcome_button').click(function () {
+			alert("Welcome, this is a click event!");
+		});
 
-			alert("Welcome!");
-
+		// jquery callback function for mouseover events on the buttons
+		$('.welcome_buttons').mouseover(function () {
+			alert("Hello, this is a mouseover event!");
 		});
 
 	});
 </script>
+
 
 </body>
 </html>
