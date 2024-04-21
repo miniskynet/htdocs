@@ -5,24 +5,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Welcome to CodeIgniter</title>
+	<title>Gamers United</title>
 
 	<style type="text/css">
 		body {
 			background-color: #202225;
 			margin: 40px;
-			font: 13px/20px normal Helvetica, Arial, sans-serif;
+			font: 13px/20px 'Orbitron', sans-serif;
 			color: #4F5155;
 		}
 
 		a {
-			color: #003399;
+			color: #33b249;
 			background-color: transparent;
 			font-weight: normal;
+			text-decoration: none;
+			transition: color 0.3s ease;
 		}
 
 		a:hover {
-			color: #97310e;
+			color: #5865F2;
 		}
 
 		#container {
@@ -38,15 +40,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			font-family: 'Arial', sans-serif;
-			border-bottom: 3px solid #5865F2;
+			font-family: 'Orbitron', sans-serif;
+			border-bottom: 3px solid #33b249;
 		}
 
-		h1, h2 {
+		h1, h2, p, label {
 			color: #fff;
 		}
 
-		input, h2 {
+		input, h2, {
 			margin: 10px;
 		}
 
@@ -57,23 +59,97 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			padding: 12px 20px;
 			margin-bottom: 15px;
 			border: 1px solid #ccc;
-			border-radius: 4px;
+			border-radius: 5px;
 		}
 
-		input[type="submit"] {
-			color: #ffffff;
-			background-color: #015546;
+		input[type="submit"]{
+			color: #fff;
+			background-color: #5865F2;
 			padding: 12px 20px;
+			border-radius: 5px;
 		}
 
-		#section {
+		input[type="file"]{
+			margin: 10px;
+		}
+
+		#sectionLeft{
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			width: 50%;
+		}
+
+		#sectionRight {
 			width: 50%;
 		}
 
 		#subsection{
+			display: flex;
+			justify-content: space-between;
 			padding-top: 10px;
 			padding-bottom: 10px;
-			border-bottom: 3px solid #89f258;
+			border-bottom: 3px solid #33b249;
+			margin: 10px;
+		}
+
+		#panel {
+			width: 60%;
+			padding: 30px;
+			margin: auto;
+			background-color: #1e1e1e;
+			color: #fff;
+			box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
+			border-radius: 15px;
+			border: 3px solid #33b249;
+			font-family: 'Orbitron', sans-serif;
+			text-align: center;
+		}
+
+
+		#subsubsectionLeft {
+			flex: 1;
+			width: 60%;
+		}
+
+		#subsubsectionRight {
+			flex: 1;
+			width: 40%;
+		}
+
+		#imagePreviewContainer {
+			width: 150px;
+			height: 150px;
+			overflow: hidden;
+			margin: 10px;
+			border-radius: 50%;
+			border: 3px solid #33b249;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background: #000;
+		}
+
+		#imagePreview {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 50%;
+		}
+
+		.checkbox-container {
+			display: flex;
+			align-items: center;
+			margin: 10px;
+		}
+
+		.checkbox-container input[type="checkbox"] {
+			margin-right: 8px;
+		}
+
+		.checkbox-container label {
+			margin: 0;
+			line-height: 1.5;
 		}
 
 	</style>
@@ -85,7 +161,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 <div id="container">
-	<div id="section">
+	<div id="sectionLeft">
+		<div id="panel">
+			<h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dignissim mattis nisl,
+				eu porttitor lorem accumsan sit amet. Curabitur arcu nibh, mollis eu finibus ac, aliquet id velit.
+				Maecenas sollicitudin diam id turpis varius, in euismod metus maximus. Duis id neque a neque tincidunt mattis sed ut ante.
+				Maecenas volutpat rutrum purus, a rutrum metus mattis egestas. Donec lacus tellus, faucibus id ullamcorper vel, consectetur eu lacus.
+				Integer pretium felis ac malesuada laoreet. Sed dignissim, lacus sed efficitur pulvinar, erat lacus mollis neque, a scelerisque ligula mi non risus.
+			</h3>
+		</div>
+	</div>
+	<div id="sectionRight">
 		<div id="subsection">
 			<form>
 				<h2>Login or Sign-up</h2><br>
@@ -95,15 +181,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</form>
 		</div>
 		<div id="subsection">
-			<form>
-				<input type="text" id="fname" name="fname" placeholder="First Name"><br>
-				<input type="text" id="lname" name="lname" placeholder="Last Name"><br>
-				<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
-				<input type="password" id="passSignup" name="passSignup" placeholder="Password"><br>
-				<input type="password" id="passConfirm" name="pass" placeholder="Password Confirmation"><br>
-				<input type="email" id="pass" name="pass" placeholder="Email"><br>
-				<input type="submit" value="Signup">
-			</form>
+			<div id="subsubsectionLeft">
+				<form>
+					<input type="text" id="fname" name="fname" placeholder="First Name"><br>
+					<input type="text" id="lname" name="lname" placeholder="Last Name"><br>
+					<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
+					<input type="password" id="passSignup" name="passSignup" placeholder="Password"><br>
+					<input type="password" id="passConfirm" name="pass" placeholder="Password Confirmation"><br>
+					<input type="email" id="pass" name="pass" placeholder="Email"><br>
+					<input type="submit" value="Signup">
+				</form>
+			</div>
+			<div id="subsubsectionRight">
+				<form>
+					<div id="imagePreviewContainer">
+						<img id="imagePreview"" />
+					</div>
+					<input type="file" id="profilePic" name="profilePic" accept="image/*" onchange="previewImage(event)"><br>
+					<div class="checkbox-container">
+						<input type="checkbox" id="terms" name="terms">
+						<label for="terms">By using our services, you agree to our <a href="URL_TO_YOUR_TERMS" target="_blank">Terms of Service</a>.
+							Read them for details on user conduct, content guidelines, and privacy policies.
+							Contact our support team for questions.</label>
+					</div>
+					<div class="checkbox-container">
+						<input type="checkbox" id="newsletter" name="newsletter">
+						<label for="newsletter">Subscribe to our newsletter for the latest updates and exclusive content.
+							By checking the box, you consent to receive newsletters and promotional emails.
+							Unsubscribe anytime in your account settings. We respect your privacy and won't share your email.</label>
+					</div>
+
+				</form>
+			</div>
 		</div>
 
 	</div>
@@ -111,4 +220,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 </body>
+
+<script>
+	function previewImage(event) {
+		var reader = new FileReader();
+		reader.onload = function() {
+			var output = document.getElementById('imagePreview');
+			output.src = reader.result;
+		};
+		reader.readAsDataURL(event.target.files[0]);
+	}
+</script>
 </html>
