@@ -197,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<input type="text" id="lname" name="lname" placeholder="Last Name"><br>
 					<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
 					<input type="password" id="passSignup" name="passSignup" placeholder="Password"><br>
-					<input type="password" id="passConfirm" name="pass" placeholder="Password Confirmation"><br>
+					<input type="password" id="passConfirm" name="passConfirm" placeholder="Password Confirmation"><br>
 					<input type="email" id="email" name="email" placeholder="Email"><br>
 					<input type="submit" value="Signup">
 				</form>
@@ -273,6 +273,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	// 		});
 	// 	});
 	// });
+
+	document.addEventListener('DOMContentLoaded', function() {
+		var form = document.getElementById('signupform'); // Replace with your form's ID
+		form.addEventListener('submit', function(event) {
+			var valid = true;
+			var inputs = form.querySelectorAll('input[type="text"], input[type="password"], input[type="email"], input[type="file"]');
+			var password = '';
+			var passwordConfirm = '';
+
+			for (var i = 0; i < inputs.length; i++) {
+				// Check for empty fields
+				if (!inputs[i].value) {
+					valid = false;
+					inputs[i].style.borderColor = 'red'; // Highlight the empty field
+				} else {
+					inputs[i].style.borderColor = ''; // Reset the field border
+					// Check if it's the password field
+					if (inputs[i].name === 'passSignup') {
+						password = inputs[i].value;
+					}
+					// Check if it's the password confirmation field
+					if (inputs[i].name === 'passConfirm') {
+						passwordConfirm = inputs[i].value;
+					}
+				}
+			}
+
+			// Check if passwords match
+			if (password !== passwordConfirm) {
+				valid = false;
+				document.getElementById('passSignup').style.borderColor = 'red';
+				document.getElementById('passConfirm').style.borderColor = 'red';
+				alert('The passwords do not match. Please enter them again.');
+			}
+
+			if (!valid) {
+				event.preventDefault(); // Prevent form submission
+				if (password === passwordConfirm) {
+					alert('Please fill out all the fields.');
+				}
+			}
+		});
+	});
 
 	function previewImage(event) {
 		var reader = new FileReader();
