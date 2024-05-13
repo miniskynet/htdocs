@@ -152,6 +152,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			line-height: 1.5;
 		}
 
+		.success {
+			color: green;
+			font-weight: bold;
+		}
+
+		.error {
+			color: red;
+			font-weight: bold;
+		}
+
 	</style>
 </head>
 <body>
@@ -182,15 +192,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 		<div id="subsection">
 			<div id="subsubsectionLeft">
-				<form>
+				<form id="signupform" name="signupform" action="http://localhost/CW/index.php/welcome_controller/signup" method="post">
 					<input type="text" id="fname" name="fname" placeholder="First Name"><br>
 					<input type="text" id="lname" name="lname" placeholder="Last Name"><br>
 					<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
 					<input type="password" id="passSignup" name="passSignup" placeholder="Password"><br>
 					<input type="password" id="passConfirm" name="pass" placeholder="Password Confirmation"><br>
-					<input type="email" id="pass" name="pass" placeholder="Email"><br>
+					<input type="email" id="email" name="email" placeholder="Email"><br>
 					<input type="submit" value="Signup">
 				</form>
+				<div id="flashdata">
+					<!-- Check for 'signup_success' flashdata and display it -->
+					<?php if($this->session->flashdata('signup_success')): ?>
+						<p class="success"><?php echo $this->session->flashdata('signup_success'); ?></p>
+						<?php $this->session->unset_userdata('signup_success'); // Clear the flashdata ?>
+					<?php endif; ?>
+
+					<!-- Check for 'signup_error' flashdata and display it -->
+					<?php if($this->session->flashdata('signup_error')): ?>
+						<p class="error"><?php echo $this->session->flashdata('signup_error'); ?></p>
+						<?php $this->session->unset_userdata('signup_error'); // Clear the flashdata ?>
+					<?php endif; ?>
+				</div>
 			</div>
 			<div id="subsubsectionRight">
 				<form>
@@ -222,6 +245,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </body>
 
 <script>
+	// Client-side JavaScript
+	// $(document).ready(function() {
+	// 	$('#signupform').submit(function(event) {
+	// 		event.preventDefault(); // Prevent form submission
+	//
+	// 		// Collect form data
+	// 		var formData = {
+	// 			fname: $('#fname').val(),
+	// 			lname: $('#lname').val(),
+	// 			usernameSignup: $('#usernameSignup').val(),
+	// 			passSignup: $('#passSignup').val(),
+	// 			email: $('#mail').val(),
+	// 		};
+	//
+	// 		// Send data to the server
+	// 		$.ajax({
+	// 			type: 'POST',
+	// 			url: 'http://localhost/CW/index.php/welcome_controller/signup',
+	// 			data: formData,
+	// 			success: function(response) {
+	// 				console.log('Signup successful:', response);
+	// 			},
+	// 			error: function(xhr, status, error) {
+	// 				console.error('Error:', error);
+	// 			}
+	// 		});
+	// 	});
+	// });
+
 	function previewImage(event) {
 		var reader = new FileReader();
 		reader.onload = function() {
