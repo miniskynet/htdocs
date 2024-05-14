@@ -192,7 +192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 		<div id="subsection">
 			<div id="subsubsectionLeft">
-				<form id="signupform" name="signupform" action="http://localhost/CW/index.php/welcome_controller/signup" method="post">
+				<form id="signupform" name="signupform">
 					<input type="text" id="fname" name="fname" placeholder="First Name"><br>
 					<input type="text" id="lname" name="lname" placeholder="Last Name"><br>
 					<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
@@ -201,24 +201,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<input type="email" id="email" name="email" placeholder="Email"><br>
 					<input type="submit" value="Signup">
 				</form>
-				<div id="flashdata">
-					<!-- Check for 'signup_success' flashdata and display it -->
-					<?php if($this->session->flashdata('signup_success')): ?>
-						<p class="success"><?php echo $this->session->flashdata('signup_success'); ?></p>
-						<?php $this->session->unset_userdata('signup_success'); // Clear the flashdata ?>
-					<?php endif; ?>
-
-					<!-- Check for 'signup_error' flashdata and display it -->
-					<?php if($this->session->flashdata('signup_error')): ?>
-						<p class="error"><?php echo $this->session->flashdata('signup_error'); ?></p>
-						<?php $this->session->unset_userdata('signup_error'); // Clear the flashdata ?>
-					<?php endif; ?>
-				</div>
 			</div>
 			<div id="subsubsectionRight">
 				<form>
 					<div id="imagePreviewContainer">
-						<img id="imagePreview"" />
+						<img id="imagePreview" />
 					</div>
 					<input type="file" id="profilePic" name="profilePic" accept="image/*" onchange="previewImage(event)"><br>
 					<div class="checkbox-container">
@@ -242,80 +229,66 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 </div>
 
-</body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-	// Client-side JavaScript
-	// $(document).ready(function() {
-	// 	$('#signupform').submit(function(event) {
-	// 		event.preventDefault(); // Prevent form submission
-	//
-	// 		// Collect form data
-	// 		var formData = {
-	// 			fname: $('#fname').val(),
-	// 			lname: $('#lname').val(),
-	// 			usernameSignup: $('#usernameSignup').val(),
-	// 			passSignup: $('#passSignup').val(),
-	// 			email: $('#mail').val(),
-	// 		};
-	//
-	// 		// Send data to the server
-	// 		$.ajax({
-	// 			type: 'POST',
-	// 			url: 'http://localhost/CW/index.php/welcome_controller/signup',
-	// 			data: formData,
-	// 			success: function(response) {
-	// 				console.log('Signup successful:', response);
-	// 			},
-	// 			error: function(xhr, status, error) {
-	// 				console.error('Error:', error);
-	// 			}
-	// 		});
-	// 	});
-	// });
+	$(document).ready(function() {
+		$('#signupform').submit(function(event) {
+			event.preventDefault(); // Prevent form submission
 
-	document.addEventListener('DOMContentLoaded', function() {
-		var form = document.getElementById('signupform'); // Replace with your form's ID
-		form.addEventListener('submit', function(event) {
-			var valid = true;
-			var inputs = form.querySelectorAll('input[type="text"], input[type="password"], input[type="email"], input[type="file"]');
-			var password = '';
-			var passwordConfirm = '';
+			// Collect form data
+			var formData = {
+				fname: $('#fname').val(),
+				lname: $('#lname').val(),
+				usernameSignup: $('#usernameSignup').val(),
+				passSignup: $('#passSignup').val(),
+				passConfirm: $('#passConfirm').val(),
+				email: $('#email').val()
+			};
 
-			for (var i = 0; i < inputs.length; i++) {
-				// Check for empty fields
-				if (!inputs[i].value) {
-					valid = false;
-					inputs[i].style.borderColor = 'red'; // Highlight the empty field
-				} else {
-					inputs[i].style.borderColor = ''; // Reset the field border
-					// Check if it's the password field
-					if (inputs[i].name === 'passSignup') {
-						password = inputs[i].value;
+			// Client-side validation
+			if (!formData.fname || !formData.lname || !formData.usernameSignup || !formData.passSignup || !formData.passConfirm || !formData.email) {
+				alert('All fields are required.');
+				return;
+			}
+
+			if (!validateEmail(formData.email)) {
+				alert('Please enter a valid email address.');
+				return;
+			}
+
+			if (formData.passSignup !== formData.passConfirm) {
+				alert('Passwords do not match.');
+				return;
+			}
+
+			// Send data to the server
+			$.ajax({
+				type: 'POST',
+				url: 'http://localhost/CW/index.php/welcome_controller/signup',
+				data: formData,
+				success: function(response) {
+					// Handle success
+					console.log('Signup successful:', response);
+					var res = JSON.parse(response);
+					if(res.success) {
+						alert('Signup successful!');
+					} else {
+						alert('Signup failed: ' + res.message);
 					}
-					// Check if it's the password confirmation field
-					if (inputs[i].name === 'passConfirm') {
-						passwordConfirm = inputs[i].value;
-					}
+				},
+				error: function(xhr, status, error) {
+					// Handle error
+					console.error('Error:', error);
+					alert('An error occurred. Please try again.');
 				}
-			}
-
-			// Check if passwords match
-			if (password !== passwordConfirm) {
-				valid = false;
-				document.getElementById('passSignup').style.borderColor = 'red';
-				document.getElementById('passConfirm').style.borderColor = 'red';
-				alert('The passwords do not match. Please enter them again.');
-			}
-
-			if (!valid) {
-				event.preventDefault(); // Prevent form submission
-				if (password === passwordConfirm) {
-					alert('Please fill out all the fields.');
-				}
-			}
+			});
 		});
 	});
+
+	function validateEmail(email) {
+		var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+		return re.test(String(email).toLowerCase());
+	}
 
 	function previewImage(event) {
 		var reader = new FileReader();
@@ -326,4 +299,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		reader.readAsDataURL(event.target.files[0]);
 	}
 </script>
+</body>
 </html>

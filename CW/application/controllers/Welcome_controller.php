@@ -25,18 +25,24 @@ class Welcome_controller extends CI_Controller {
 			$inserted = $this->Welcome_model->insert_user($userData);
 
 			if ($inserted) {
-				// Success message
-				$this->session->set_flashdata('signup_success', 'Account created successfully.');
+				// Success response
+				$response = array('success' => true, 'message' => 'Account created successfully.');
 			} else {
-				// Error message
-				$this->session->set_flashdata('signup_error', 'Username or Email already exists. Please choose different ones.');
+				// Error response
+				$response = array('success' => false, 'message' => 'Username or Email already exists. Please choose different ones.');
 			}
 
-			redirect('http://localhost/CW/');
+			// Return JSON response
+			echo json_encode($response);
+			return;
 		}
+
+		// If not a POST request, load the index view
+		$this->index();
 	}
 
 	public function index() {
 		$this->load->view('Welcome_view');
 	}
 }
+
