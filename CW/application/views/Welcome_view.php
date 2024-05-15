@@ -272,6 +272,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					var res = JSON.parse(response);
 					if(res.success) {
 						alert('Signup successful!');
+						$('#signupform')[0].reset();
 					} else {
 						alert('Signup failed: ' + res.message);
 					}
