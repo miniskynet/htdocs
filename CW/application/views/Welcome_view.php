@@ -173,12 +173,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div id="container">
 	<div id="sectionLeft">
 		<div id="panel">
-			<h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dignissim mattis nisl,
-				eu porttitor lorem accumsan sit amet. Curabitur arcu nibh, mollis eu finibus ac, aliquet id velit.
-				Maecenas sollicitudin diam id turpis varius, in euismod metus maximus. Duis id neque a neque tincidunt mattis sed ut ante.
-				Maecenas volutpat rutrum purus, a rutrum metus mattis egestas. Donec lacus tellus, faucibus id ullamcorper vel, consectetur eu lacus.
-				Integer pretium felis ac malesuada laoreet. Sed dignissim, lacus sed efficitur pulvinar, erat lacus mollis neque, a scelerisque ligula mi non risus.
-			</h3>
+			<h3>Welcome to Gamers United! Dive into a vibrant community of gamers from around the world.
+				Here, you can connect with fellow enthusiasts, share your latest gaming achievements, and stay updated on the hottest releases.
+				Whether you’re a fan of action-packed shooters, immersive RPGs, or casual mobile games, you’ll find a space to share your passion and discover new favorites.</h3><br>
+
+				<h3>At Gamers United, we celebrate all things gaming.
+					Post your gameplay screenshots, write reviews of the latest games,
+					share your fan art, and engage in discussions about gaming strategies, updates, and more.
+					Follow other gamers to stay updated on their content and build your own following by sharing unique and engaging posts.</h3><br>
+
+				<h3>Explore, create, and share within a community that values your voice.
+					Join Gamers United today and become part of a dynamic and inclusive network where every gamer has a place.</h3><br>
 		</div>
 	</div>
 	<div id="sectionRight">
@@ -198,7 +203,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
 					<input type="password" id="passSignup" name="passSignup" placeholder="Password"><br>
 					<input type="password" id="passConfirm" name="passConfirm" placeholder="Password Confirmation"><br>
-					<input type="email" id="email" name="email" placeholder="Email"><br>
+					<input type="text" id="email" name="email" placeholder="Email"><br>
 					<input type="submit" value="Signup">
 				</form>
 			</div>
@@ -267,8 +272,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				url: 'http://localhost/CW/index.php/welcome_controller/signup',
 				data: formData,
 				success: function(response) {
-					// Handle success
-					console.log('Signup successful:', response);
 					var res = JSON.parse(response);
 					if(res.success) {
 						alert('Signup successful!');
@@ -278,8 +281,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					}
 				},
 				error: function(xhr, status, error) {
-					// Handle error
-					console.error('Error:', error);
 					alert('An error occurred. Please try again.');
 				}
 			});
