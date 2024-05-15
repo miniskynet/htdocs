@@ -26,4 +26,12 @@ class Welcome_model extends CI_Model {
 		}
 		return $this->db->insert('users', $data); // Insert the data if user does not exist
 	}
+
+	public function get_user($username) {
+		$this->db->from('users');
+		$this->db->where('username', $username);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
 }

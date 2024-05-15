@@ -41,6 +41,34 @@ class Welcome_controller extends CI_Controller {
 		$this->index();
 	}
 
+	public function login() {
+		if ($this->input->server('REQUEST_METHOD') == 'POST') {
+			$username = $this->input->post('usernameLogin');
+			$password = $this->input->post('passLogin');
+
+			$user = $this->Welcome_model->get_user($username);
+
+			if ($user && password_verify($password, $user->password)) {
+				$this->session->set_userdata('user_id', $user->id);
+				$response = array('success' => true, 'message' => 'Login successful.');
+			} else {
+				$response = array('success' => false, 'message' => 'Invalid username or password.');
+			}
+
+			echo json_encode($response);
+			return;
+		}
+
+		$this->index();
+	}
+
+	public function home() {
+		if (!$this->session->userdata('user_id')) {
+			redirect('/');
+		}
+		$this->load->view('Home_view');
+	}
+
 	public function index() {
 		$this->load->view('Welcome_view');
 	}

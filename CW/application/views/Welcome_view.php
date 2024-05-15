@@ -188,7 +188,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	</div>
 	<div id="sectionRight">
 		<div id="subsection">
-			<form>
+			<form id="loginForm" name="loginForm">
 				<h2>Login or Sign-up</h2><br>
 				<input type="text" id="usernameLogin" name="usernameLogin" placeholder="Username">
 				<input type="password" id="passLogin" name="passLogin" placeholder="Password"><br>
@@ -197,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		</div>
 		<div id="subsection">
 			<div id="subsubsectionLeft">
-				<form id="signupform" name="signupform">
+				<form id="signupForm" name="signupForm">
 					<input type="text" id="fname" name="fname" placeholder="First Name"><br>
 					<input type="text" id="lname" name="lname" placeholder="Last Name"><br>
 					<input type="text" id="usernameSignup" name="usernameSignup" placeholder="Username"><br>
@@ -237,7 +237,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$('#signupform').submit(function(event) {
+		$('#signupForm').submit(function(event) {
 			event.preventDefault(); // Prevent form submission
 
 			// Collect form data
@@ -275,7 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					var res = JSON.parse(response);
 					if(res.success) {
 						alert('Signup successful!');
-						$('#signupform')[0].reset();
+						$('#signupForm')[0].reset();
 					} else {
 						alert('Signup failed: ' + res.message);
 					}
@@ -291,6 +291,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 		return re.test(String(email).toLowerCase());
 	}
+
+	$('#loginForm').submit(function(event) {
+		event.preventDefault();
+
+		var formData = $(this).serialize();
+		$.ajax({
+			type: 'POST',
+			url: 'http://localhost/CW/index.php/welcome_controller/login',
+			data: formData,
+			success: function(response) {
+				var res = JSON.parse(response);
+				if (res.success) {
+					alert('Login successful!');
+					window.location.href = 'http://localhost/CW/index.php/welcome_controller/home';
+				} else {
+					alert('Login failed: ' + res.message);
+				}
+			},
+			error: function(xhr, status, error) {
+				alert('An error occurred. Please try again.');
+			}
+		});
+	});
 
 	function previewImage(event) {
 		var reader = new FileReader();
