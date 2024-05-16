@@ -75,16 +75,52 @@
 			border-radius: 5px;
 			cursor: pointer;
 		}
+
+		#nav {
+			background-color: #202225;
+			color: #fff;
+			padding: 10px 20px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-family: 'Orbitron', sans-serif;
+			border-bottom: 3px solid #33b249;
+		}
+
+		#imagePreviewContainer {
+			overflow: hidden;
+			margin: 10px;
+			border: 3px solid #33b249;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background: #000;
+		}
+
+		#imagePreview {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
 	</style>
 </head>
 <body>
+
+<div id="nav">
+	<h1>Welcome to Gamers United!</h1>
+</div>
 
 <div id="container">
 	<div id="postForm">
 		<h2>Create a Post</h2>
 		<form id="createPostForm">
-			<textarea name="postText" placeholder="What's on your mind?" required></textarea>
-			<input type="file" name="postImage" accept="image/*">
+			<textarea name="postText" placeholder="What are you up to?" required></textarea>
+			<textarea name="gameName" placeholder="What game are you playing?" required></textarea>
+			<div id="imagePreviewContainer">
+				<img id="imagePreview" />
+			</div>
+			<input type="file" name="postImage" accept="image/*" onchange="previewImage(event)">
 			<input type="submit" value="Post">
 		</form>
 	</div>
@@ -136,10 +172,16 @@
 							postsHtml += '<div class="post">';
 							postsHtml += '<p><strong>' + post.username + ':</strong></p>';
 							postsHtml += '<p>' + post.text + '</p>';
+							postsHtml += '<p><strong>Game:</strong> ' + post.game_name + '</p>';
 							if (post.image) {
 								postsHtml += '<img src="' + post.image + '" alt="Post Image" style="width: 100%;">';
 							}
-							postsHtml += '</div>';
+							postsHtml += '<div class="actions">';
+							postsHtml += '<button class="vote-up" data-post-id="' + post.id + '">Upvote</button>';
+							postsHtml += '<button class="comment" data-post-id="' + post.id + '">Comment</button>';
+							postsHtml += '</div>'; // Close actions div
+							postsHtml += '<div class="comments" id="comments-' + post.id + '"></div>'; // Empty div for comments
+							postsHtml += '</div>'; // Close post div
 						});
 						$('#posts').html(postsHtml);
 					} else {
@@ -154,6 +196,16 @@
 
 		loadPosts();
 	});
+
+	function previewImage(event) {
+		var reader = new FileReader();
+		reader.onload = function() {
+			var output = document.getElementById('imagePreview');
+			output.src = reader.result;
+		};
+		reader.readAsDataURL(event.target.files[0]);
+	}
+
 </script>
 
 </body>
