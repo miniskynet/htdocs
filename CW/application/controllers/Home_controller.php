@@ -49,7 +49,7 @@ class Home_controller extends CI_Controller {
 				$this->session->set_flashdata('message', 'Failed to submit post.');
 			}
 
-			redirect('home_controller');
+			redirect('http://localhost/CW/index.php/home_controller/');
 		}
 	}
 
