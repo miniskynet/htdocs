@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Gamers United - Home</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<style type="text/css">
 		body {
 			background-color: #202225;
@@ -102,7 +103,6 @@
 			height: 100%;
 			object-fit: cover;
 		}
-
 	</style>
 </head>
 <body>
@@ -134,6 +134,15 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
+		// Load posts initially
+		loadPosts();
+
+		// Event delegation for dynamic elements
+		$('#posts').on('click', '.vote-up', function() {
+			var postId = $(this).data('post-id');
+			upvotePost(postId, $(this));
+		});
+
 		$('#createPostForm').submit(function(event) {
 			event.preventDefault();
 
@@ -177,10 +186,11 @@
 								postsHtml += '<img src="' + post.image + '" alt="Post Image" style="width: 100%;">';
 							}
 							postsHtml += '<div class="actions">';
-							postsHtml += '<button class="vote-up" data-post-id="' + post.id + '">Upvote</button>';
-							postsHtml += '<button class="comment" data-post-id="' + post.id + '">Comment</button>';
+							postsHtml += '<button class="vote-up" data-post-id="' + post.post_id + '"><i class="fas fa-thumbs-up"></i></button>';
+							postsHtml += '<span class="upvotes-count"> Upvotes: ' + post.up_votes + '</span>';
+							postsHtml += '<button class="comment" data-post-id="' + post.post_id + '">Comment</button>';
 							postsHtml += '</div>'; // Close actions div
-							postsHtml += '<div class="comments" id="comments-' + post.id + '"></div>'; // Empty div for comments
+							postsHtml += '<div class="comments" id="comments-' + post.post_id + '"></div>'; // Empty div for comments
 							postsHtml += '</div>'; // Close post div
 						});
 						$('#posts').html(postsHtml);
@@ -194,19 +204,36 @@
 			});
 		}
 
-		loadPosts();
+		function upvotePost(postId, button) {
+			$.ajax({
+				url: 'http://localhost/CW/index.php/home_controller/upvote_post',
+				type: 'POST',
+				data: { post_id: postId },
+				success: function(response) {
+					var res = JSON.parse(response);
+					if (res.success) {
+						var upvotesCountElement = button.siblings('.upvotes-count');
+						upvotesCountElement.text('Upvotes: ' + res.updated_upvotes);
+						button.find('i').css('color', '#5865F2');
+					} else {
+						alert('Failed to upvote: ' + res.message);
+					}
+				},
+				error: function(xhr, status, error) {
+					alert('An error occurred. Please try again.');
+				}
+			});
+		}
+
+		function previewImage(event) {
+			var reader = new FileReader();
+			reader.onload = function() {
+				var output = document.getElementById('imagePreview');
+				output.src = reader.result;
+			};
+			reader.readAsDataURL(event.target.files[0]);
+		}
 	});
-
-	function previewImage(event) {
-		var reader = new FileReader();
-		reader.onload = function() {
-			var output = document.getElementById('imagePreview');
-			output.src = reader.result;
-		};
-		reader.readAsDataURL(event.target.files[0]);
-	}
-
 </script>
-
 </body>
 </html>

@@ -24,7 +24,7 @@ class Home_controller extends CI_Controller {
 			$gameName = $this->input->post('gameName');
 			$postImage = '';
 
-			if (isset($_FILES['postImage']) && $_FILES['postImage']['size'] > 0) {
+			if (isset($_FILES['postImage'])&& $_FILES['postImage']['size'] > 0) {
 				$config['upload_path'] = './uploads/';
 				$config['allowed_types'] = 'gif|jpg|jpeg|png';
 				$this->load->library('upload', $config);
@@ -58,6 +58,16 @@ class Home_controller extends CI_Controller {
 		echo json_encode(array('success' => true, 'posts' => $posts));
 	}
 
+	public function upvote_post() {
+		if ($this->input->server('REQUEST_METHOD') == 'POST') {
+			$post_id = $this->input->post('post_id');
+			$updated_upvotes = $this->Home_model->upvote_post($post_id);
+			echo json_encode(array('success' => true, 'message' => 'Post upvoted', 'updated_upvotes' => $updated_upvotes));
+		} else {
+			echo json_encode(array('success' => false, 'message' => 'Invalid request'));
+		}
+	}
+
 	public function logout() {
 		$this->session->unset_userdata('user_id');
 		$this->session->unset_userdata('username');
@@ -69,3 +79,4 @@ class Home_controller extends CI_Controller {
 		// This could involve fetching user details, posts, etc.
 	}
 }
+
