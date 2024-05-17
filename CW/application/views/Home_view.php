@@ -103,6 +103,39 @@
 			height: 100%;
 			object-fit: cover;
 		}
+
+		.post {
+			margin-bottom: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #333;
+			color: #fff;
+		}
+
+		.actions {
+			margin-top: 10px;
+		}
+
+		.comments {
+			margin-top: 10px;
+			background-color: #444;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		.comment {
+			margin-bottom: 10px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #555;
+			color: #fff;
+		}
+
+		.comment-form {
+			margin-top: 10px;
+		}
 	</style>
 </head>
 <body>
@@ -143,6 +176,13 @@
 			upvotePost(postId, $(this));
 		});
 
+		$('#posts').on('submit', '.comment-form', function(event) {
+			event.preventDefault();
+			var postId = $(this).data('post-id');
+			var commentText = $(this).find('textarea[name="commentText"]').val();
+			addComment(postId, commentText);
+		});
+
 		$('#createPostForm').submit(function(event) {
 			event.preventDefault();
 
@@ -154,16 +194,25 @@
 				contentType: false,
 				processData: false,
 				success: function(response) {
-					var res = JSON.parse(response);
-					if (res.success) {
-						alert('Post submitted successfully!');
-						$('#createPostForm')[0].reset();
-						loadPosts();
-					} else {
-						alert('Failed to submit post: ' + res.message);
+					try {
+						var res = JSON.parse(response);
+						if (res.success) {
+							alert('Post submitted successfully!');
+							$('#createPostForm')[0].reset();
+							$('#imagePreview').attr('src', '');
+							loadPosts();
+						} else {
+							alert('Failed to submit post: ' + res.message);
+						}
+					} catch (e) {
+						console.error('Error parsing JSON response:', e);
+						console.error('Response:', response);
+						alert('An unexpected error occurred.');
 					}
 				},
 				error: function(xhr, status, error) {
+					console.error('AJAX error:', status, error);
+					console.error('Response:', xhr.responseText);
 					alert('An error occurred. Please try again.');
 				}
 			});
@@ -188,9 +237,18 @@
 							postsHtml += '<div class="actions">';
 							postsHtml += '<button class="vote-up" data-post-id="' + post.post_id + '"><i class="fas fa-thumbs-up"></i></button>';
 							postsHtml += '<span class="upvotes-count"> Upvotes: ' + post.up_votes + '</span>';
-							postsHtml += '<button class="comment" data-post-id="' + post.post_id + '">Comment</button>';
 							postsHtml += '</div>'; // Close actions div
-							postsHtml += '<div class="comments" id="comments-' + post.post_id + '"></div>'; // Empty div for comments
+							postsHtml += '<div class="comments" id="comments-' + post.post_id + '">';
+							post.comments.forEach(function(comment) {
+								postsHtml += '<div class="comment">';
+								postsHtml += '<p><strong>' + comment.username + ':</strong> ' + comment.comment_text + '</p>';
+								postsHtml += '</div>';
+							});
+							postsHtml += '<form class="comment-form" data-post-id="' + post.post_id + '">';
+							postsHtml += '<textarea name="commentText" placeholder="Add a comment..." required></textarea>';
+							postsHtml += '<input type="submit" value="Comment">';
+							postsHtml += '</form>';
+							postsHtml += '</div>'; // Close comments div
 							postsHtml += '</div>'; // Close post div
 						});
 						$('#posts').html(postsHtml);
@@ -216,7 +274,26 @@
 						upvotesCountElement.text('Upvotes: ' + res.updated_upvotes);
 						button.find('i').css('color', '#5865F2');
 					} else {
-						alert('Failed to upvote: ' + res.message);
+						alert('Failed to upvote post: ' + res.message);
+					}
+				},
+				error: function(xhr, status, error) {
+					alert('An error occurred. Please try again.');
+				}
+			});
+		}
+
+		function addComment(postId, commentText) {
+			$.ajax({
+				url: 'http://localhost/CW/index.php/home_controller/add_comment',
+				type: 'POST',
+				data: { post_id: postId, comment_text: commentText },
+				success: function(response) {
+					var res = JSON.parse(response);
+					if (res.success) {
+						loadPosts(); // Reload posts to show the new comment
+					} else {
+						alert('Failed to add comment: ' + res.message);
 					}
 				},
 				error: function(xhr, status, error) {
@@ -231,10 +308,9 @@
 		reader.onload = function() {
 			var output = document.getElementById('imagePreview');
 			output.src = reader.result;
-		};
+		}
 		reader.readAsDataURL(event.target.files[0]);
 	}
-
 </script>
 </body>
 </html>
