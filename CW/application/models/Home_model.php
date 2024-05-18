@@ -27,19 +27,22 @@ class Home_model extends CI_Model {
 		return $posts;
 	}
 
-	public function get_post_by_id($id) {
+	public function search_posts($query) {
 		$this->db->select('posts.*, users.username, posts.up_votes');
 		$this->db->from('posts');
 		$this->db->join('users', 'posts.user_id = users.id');
-		$this->db->where('posts.post_id', $id);
+		$this->db->like('posts.text', $query);
+		$this->db->or_like('posts.game_name', $query);
+		$this->db->or_like('users.username', $query);
+		$this->db->order_by('posts.created_at', 'DESC');
 		$query = $this->db->get();
-		$post = $query->row_array();
+		$posts = $query->result_array();
 
-		if ($post) {
+		foreach ($posts as &$post) {
 			$post['comments'] = $this->get_comments($post['post_id']);
 		}
 
-		return $post;
+		return $posts;
 	}
 
 	public function upvote_post($post_id) {

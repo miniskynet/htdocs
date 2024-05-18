@@ -88,6 +88,30 @@
 			border-bottom: 3px solid #33b249;
 		}
 
+		.nav-middle {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.nav-middle input[type="text"] {
+			padding: 5px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			width: 200px;
+		}
+
+		.nav-middle button {
+			color: #fff;
+			background-color: #5865F2;
+			padding: 5px 10px;
+			border-radius: 5px;
+			border: none;
+			cursor: pointer;
+			margin-left: 10px;
+		}
+
 		.nav-buttons {
 			display: flex;
 			gap: 10px;
@@ -161,7 +185,10 @@
 <body>
 
 <div id="nav">
-	<h1>Gamers United</h1>
+	<div class="nav-middle">
+		<input type="text" id="searchInput" placeholder="Search posts...">
+		<button id="searchButton"><i class="fas fa-search"></i> Search</button>
+	</div>
 	<div class="nav-buttons">
 		<a href="http://localhost/CW/index.php/home_controller/user_profile"><i class="fas fa-user"></i>Profile</a>
 		<a href="http://localhost/CW/index.php/home_controller/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
@@ -243,6 +270,11 @@
 			});
 		});
 
+		$('#searchButton').click(function() {
+			var query = $('#searchInput').val();
+			searchPosts(query);
+		});
+
 		function loadPosts() {
 			$.ajax({
 				url: 'http://localhost/CW/index.php/home_controller/get_posts',
@@ -250,33 +282,7 @@
 				success: function(response) {
 					var res = JSON.parse(response);
 					if (res.success) {
-						var postsHtml = '';
-						res.posts.forEach(function(post) {
-							postsHtml += '<div class="post">';
-							postsHtml += '<p><strong>' + post.username + ':</strong></p>';
-							postsHtml += '<p>' + post.text + '</p>';
-							postsHtml += '<p><strong>Game:</strong> ' + post.game_name + '</p>';
-							if (post.image) {
-								postsHtml += '<img src="' + post.image + '" alt="Post Image" style="width: 100%;">';
-							}
-							postsHtml += '<div class="actions">';
-							postsHtml += '<button class="vote-up" data-post-id="' + post.post_id + '"><i class="fas fa-thumbs-up"></i></button>';
-							postsHtml += '<span class="upvotes-count"> Upvotes: ' + post.up_votes + '</span>';
-							postsHtml += '</div>'; // Close actions div
-							postsHtml += '<div class="comments" id="comments-' + post.post_id + '">';
-							post.comments.forEach(function(comment) {
-								postsHtml += '<div class="comment">';
-								postsHtml += '<p><strong>' + comment.username + ':</strong> ' + comment.comment_text + '</p>';
-								postsHtml += '</div>';
-							});
-							postsHtml += '<form class="comment-form" data-post-id="' + post.post_id + '">';
-							postsHtml += '<textarea name="commentText" placeholder="Add a comment..." required></textarea>';
-							postsHtml += '<input type="submit" value="Comment">';
-							postsHtml += '</form>';
-							postsHtml += '</div>'; // Close comments div
-							postsHtml += '</div>'; // Close post div
-						});
-						$('#posts').html(postsHtml);
+						displayPosts(res.posts);
 					} else {
 						$('#posts').html('<p>No posts found.</p>');
 					}
@@ -285,6 +291,55 @@
 					$('#posts').html('<p>An error occurred while loading posts. Please try again.</p>');
 				}
 			});
+		}
+
+		function searchPosts(query) {
+			$.ajax({
+				url: 'http://localhost/CW/index.php/home_controller/search_posts',
+				type: 'GET',
+				data: { query: query },
+				success: function(response) {
+					var res = JSON.parse(response);
+					if (res.success) {
+						displayPosts(res.posts);
+					} else {
+						$('#posts').html('<p>No posts found for your search.</p>');
+					}
+				},
+				error: function(xhr, status, error) {
+					$('#posts').html('<p>An error occurred while searching posts. Please try again.</p>');
+				}
+			});
+		}
+
+		function displayPosts(posts) {
+			var postsHtml = '';
+			posts.forEach(function(post) {
+				postsHtml += '<div class="post">';
+				postsHtml += '<p><strong>' + post.username + ':</strong></p>';
+				postsHtml += '<p>' + post.text + '</p>';
+				postsHtml += '<p><strong>Game:</strong> ' + post.game_name + '</p>';
+				if (post.image) {
+					postsHtml += '<img src="' + post.image + '" alt="Post Image" style="width: 100%;">';
+				}
+				postsHtml += '<div class="actions">';
+				postsHtml += '<button class="vote-up" data-post-id="' + post.post_id + '"><i class="fas fa-thumbs-up"></i></button>';
+				postsHtml += '<span class="upvotes-count"> Upvotes: ' + post.up_votes + '</span>';
+				postsHtml += '</div>'; // Close actions div
+				postsHtml += '<div class="comments" id="comments-' + post.post_id + '">';
+				post.comments.forEach(function(comment) {
+					postsHtml += '<div class="comment">';
+					postsHtml += '<p><strong>' + comment.username + ':</strong> ' + comment.comment_text + '</p>';
+					postsHtml += '</div>';
+				});
+				postsHtml += '<form class="comment-form" data-post-id="' + post.post_id + '">';
+				postsHtml += '<textarea name="commentText" placeholder="Add a comment..." required></textarea>';
+				postsHtml += '<input type="submit" value="Comment">';
+				postsHtml += '</form>';
+				postsHtml += '</div>'; // Close comments div
+				postsHtml += '</div>'; // Close post div
+			});
+			$('#posts').html(postsHtml);
 		}
 
 		function upvotePost(postId, button) {

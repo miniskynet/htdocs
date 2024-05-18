@@ -61,6 +61,17 @@ class Home_controller extends CI_Controller {
 		echo json_encode(array('success' => true, 'posts' => $posts));
 	}
 
+	public function search_posts() {
+		$this->_set_cors_headers();
+		if ($this->input->server('REQUEST_METHOD') == 'GET') {
+			$query = $this->input->get('query');
+			$posts = $this->Home_model->search_posts($query);
+			echo json_encode(array('success' => true, 'posts' => $posts));
+		} else {
+			echo json_encode(array('success' => false, 'message' => 'Invalid request'));
+		}
+	}
+
 	public function upvote_post() {
 		$this->_set_cors_headers();
 		if ($this->input->server('REQUEST_METHOD') == 'POST') {
