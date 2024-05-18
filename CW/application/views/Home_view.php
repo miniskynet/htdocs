@@ -92,7 +92,7 @@
 			overflow: hidden;
 			margin: 10px;
 			border: 3px solid #33b249;
-			display: flex;
+			display: none; /* Initially hide the container */
 			justify-content: center;
 			align-items: center;
 			background: #000;
@@ -199,7 +199,8 @@
 						if (res.success) {
 							alert('Post submitted successfully!');
 							$('#createPostForm')[0].reset();
-							$('#imagePreview').attr('src', '');
+							$('#imagePreview').attr('src', ''); // Clear the image preview
+							$('#imagePreviewContainer').hide(); // Hide the image preview container
 							loadPosts();
 						} else {
 							alert('Failed to submit post: ' + res.message);
@@ -308,6 +309,7 @@
 		reader.onload = function() {
 			var output = document.getElementById('imagePreview');
 			output.src = reader.result;
+			$('#imagePreviewContainer').show(); // Show the image preview container
 		}
 		reader.readAsDataURL(event.target.files[0]);
 	}
