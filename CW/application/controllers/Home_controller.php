@@ -99,7 +99,7 @@ class Home_controller extends CI_Controller {
 	public function logout() {
 		$this->session->unset_userdata('user_id');
 		$this->session->unset_userdata('username');
-		redirect('/');
+		redirect('http://localhost/CW/');
 	}
 
 	public function user_profile($user_id) {

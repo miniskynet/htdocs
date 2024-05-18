@@ -88,6 +88,26 @@
 			border-bottom: 3px solid #33b249;
 		}
 
+		.nav-buttons {
+			display: flex;
+			gap: 10px;
+		}
+
+		.nav-buttons a {
+			color: #fff;
+			background-color: #5865F2;
+			padding: 10px 15px;
+			border-radius: 5px;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.nav-buttons a i {
+			margin-right: 5px;
+		}
+
 		#imagePreviewContainer {
 			overflow: hidden;
 			margin: 10px;
@@ -141,7 +161,11 @@
 <body>
 
 <div id="nav">
-	<h1>Welcome to Gamers United!</h1>
+	<h1>Gamers United</h1>
+	<div class="nav-buttons">
+		<a href="http://localhost/CW/index.php/home_controller/user_profile"><i class="fas fa-user"></i>Profile</a>
+		<a href="http://localhost/CW/index.php/home_controller/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+	</div>
 </div>
 
 <div id="container">
