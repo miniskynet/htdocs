@@ -185,15 +185,19 @@
 <body>
 
 <div id="nav">
-	<!--search field to filter content based on keyword-->
+	<!-- Add the home button -->
+	<div class="nav-buttons" id="homeButton" style="display: none;">
+		<a href="#"><i class="fas fa-home"></i>Home</a>
+	</div>
+	<!-- search field to filter content based on keyword -->
 	<div class="nav-middle">
 		<input type="text" id="searchInput" placeholder="Search posts...">
 		<button id="searchButton"><i class="fas fa-search"></i> Search</button>
 	</div>
-	<!--buttons to go to user profile or logout-->
+	<!-- buttons to go to user profile or logout -->
 	<div class="nav-buttons">
 		<a href="#" id="profileButton"><i class="fas fa-user"></i>Profile</a>
-		<a href="http://localhost/CW/index.php/home_controller/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
+		<a href="http://localhost/CW/index.php/home_controller/logout" id="logoutButton"><i class="fas fa-sign-out-alt"></i>Logout</a>
 	</div>
 </div>
 
@@ -432,6 +436,7 @@
 	});
 
 	// Define the User Profile View
+	// Define the User Profile View
 	var UserProfileView = Backbone.View.extend({
 		el: '#container',
 		template: _.template(`
@@ -439,13 +444,17 @@
             <h2>User Profile</h2>
             <p>Username: <%= username %></p>
             <p>Email: <%= email %></p>
-			<p>First Name: <%= first_name %></p>
-			<p>Last Name: <%= last_name %></p>
-			<p>User ID: <%= id %></p>
-			<p>Profile created on: <%= created_at %></p>
+            <p>First Name: <%= first_name %></p>
+            <p>Last Name: <%= last_name %></p>
+            <p>User ID: <%= id %></p>
+            <p>Profile created on: <%= created_at %></p>
         </div>
     `),
 		initialize: function(options) {
+			$('#profileButton').hide();
+			$('#searchInput').hide();
+			$('#searchButton').hide();
+
 			this.user = new User({ id: options.userId });
 			this.listenTo(this.user, 'sync', this.render);
 			this.user.fetch();
@@ -471,10 +480,20 @@
 	Backbone.history.start();
 
 	// Navigate to user profile when profile button is clicked
+	// Navigate to user profile when profile button is clicked
 	$('#profileButton').click(function(e) {
 		e.preventDefault();
 		var userId = <?php echo json_encode($_SESSION['user_id']); ?>;
 		appRouter.navigate('user/' + userId, { trigger: true });
+
+		// Show the home button
+		$('#homeButton').show();
+	});
+
+	$('#homeButton a').click(function(e) {
+		e.preventDefault();
+		// Reload the page
+		window.location.href = 'http://localhost/CW/index.php/welcome_controller/home';
 	});
 
 </script>
