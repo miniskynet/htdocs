@@ -184,7 +184,6 @@
 </head>
 <body>
 
-
 <div id="nav">
 	<!--search field to filter content based on keyword-->
 	<div class="nav-middle">
@@ -193,7 +192,7 @@
 	</div>
 	<!--buttons to go to user profile or logout-->
 	<div class="nav-buttons">
-		<a href="http://localhost/CW/index.php/home_controller/user_profile"><i class="fas fa-user"></i>Profile</a>
+		<a href="#" id="profileButton"><i class="fas fa-user"></i>Profile</a>
 		<a href="http://localhost/CW/index.php/home_controller/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
 	</div>
 </div>
@@ -417,6 +416,67 @@
 		}
 		reader.readAsDataURL(event.target.files[0]);
 	}
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
+<script>
+	// Define the User model
+	var User = Backbone.Model.extend({
+		defaults: {
+			id: null,
+			username: '',
+			email: ''
+		},
+		urlRoot: 'http://localhost/CW/index.php/home_controller/user_profile'
+	});
+
+	// Define the User Profile View
+	var UserProfileView = Backbone.View.extend({
+		el: '#container',
+		template: _.template(`
+        <div id="userProfile" style="color: #fff;">
+            <h2>User Profile</h2>
+            <p>Username: <%= username %></p>
+            <p>Email: <%= email %></p>
+			<p>First Name: <%= first_name %></p>
+			<p>Last Name: <%= last_name %></p>
+			<p>User ID: <%= id %></p>
+			<p>Profile created on: <%= created_at %></p>
+        </div>
+    `),
+		initialize: function(options) {
+			this.user = new User({ id: options.userId });
+			this.listenTo(this.user, 'sync', this.render);
+			this.user.fetch();
+		},
+		render: function() {
+			this.$el.html(this.template(this.user.toJSON()));
+			return this;
+		}
+	});
+
+	// Define the Router
+	var AppRouter = Backbone.Router.extend({
+		routes: {
+			'user/:id': 'userProfile'
+		},
+		userProfile: function(id) {
+			new UserProfileView({ userId: id });
+		}
+	});
+
+	// Initialize the router
+	var appRouter = new AppRouter();
+	Backbone.history.start();
+
+	// Navigate to user profile when profile button is clicked
+	$('#profileButton').click(function(e) {
+		e.preventDefault();
+		var userId = <?php echo json_encode($_SESSION['user_id']); ?>;
+		appRouter.navigate('user/' + userId, { trigger: true });
+	});
+
 </script>
 </body>
 </html>

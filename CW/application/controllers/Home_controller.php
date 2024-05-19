@@ -124,8 +124,12 @@ class Home_controller extends CI_Controller {
 	}
 
 	public function user_profile($user_id) {
-		// Implement the functionality to navigate to user profile page
-		// This could involve fetching user details, posts, etc.
+		if ($this->input->is_ajax_request()) {
+			$user = $this->Home_model->get_user($user_id);
+			echo json_encode($user);
+		} else {
+			// Handle non-AJAX request
+		}
 	}
 
 	private function _set_cors_headers() {
