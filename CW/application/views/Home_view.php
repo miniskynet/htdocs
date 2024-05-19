@@ -425,7 +425,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
 <script>
-	// Define the User model
+	//define the user model
 	var User = Backbone.Model.extend({
 		defaults: {
 			id: null,
@@ -435,10 +435,10 @@
 		urlRoot: 'http://localhost/CW/index.php/home_controller/user_profile'
 	});
 
-	// Define the User Profile View
-	// Define the User Profile View
+	//define the user profile view
 	var UserProfileView = Backbone.View.extend({
 		el: '#container',
+		//create the template for the user profile
 		template: _.template(`
         <div id="userProfile" style="color: #fff;">
             <h2>User Profile</h2>
@@ -451,6 +451,7 @@
         </div>
     `),
 		initialize: function(options) {
+			//hide home page elements
 			$('#profileButton').hide();
 			$('#searchInput').hide();
 			$('#searchButton').hide();
@@ -465,7 +466,7 @@
 		}
 	});
 
-	// Define the Router
+	//define the router
 	var AppRouter = Backbone.Router.extend({
 		routes: {
 			'user/:id': 'userProfile'
@@ -475,24 +476,23 @@
 		}
 	});
 
-	// Initialize the router
+	//initialize the router
 	var appRouter = new AppRouter();
 	Backbone.history.start();
 
-	// Navigate to user profile when profile button is clicked
-	// Navigate to user profile when profile button is clicked
+	//navigate to user profile when profile button is clicked
 	$('#profileButton').click(function(e) {
 		e.preventDefault();
 		var userId = <?php echo json_encode($_SESSION['user_id']); ?>;
 		appRouter.navigate('user/' + userId, { trigger: true });
 
-		// Show the home button
+		//show the hidden home button
 		$('#homeButton').show();
 	});
 
 	$('#homeButton a').click(function(e) {
 		e.preventDefault();
-		// Reload the page
+		//reload the page
 		window.location.href = 'http://localhost/CW/index.php/welcome_controller/home';
 	});
 

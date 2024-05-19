@@ -76,7 +76,7 @@ class Home_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	// Retrieve user data based on user ID
+	//retrieve user data based on user ID
 	public function get_user($user_id) {
 		$this->db->where('id', $user_id);
 		$query = $this->db->get('users');
