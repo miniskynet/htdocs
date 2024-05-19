@@ -180,6 +180,53 @@
 		.comment-form {
 			margin-top: 10px;
 		}
+
+		.profile-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center; /* Centering the profile container */
+			text-align: center;
+			color: #fff;
+			background-color: #1e1e1e;
+			padding: 30px;
+			margin: 20px auto;
+			width: 60%;
+			box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
+			border-radius: 15px;
+			border: 3px solid #33b249;
+		}
+
+		.profile-picture {
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			background-color: #5865F2;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border: 5px solid #33b249;
+			margin-bottom: 20px;
+		}
+
+		.user-icon {
+			color: #fff;
+			font-size: 100px;
+		}
+
+		.profile-container h2 {
+			margin-bottom: 20px;
+			color: #33b249;
+		}
+
+		.profile-container p {
+			margin: 10px 0;
+			color: #fff;
+		}
+
+		.profile-container p strong {
+			color: #33b249;
+		}
+
 	</style>
 </head>
 <body>
@@ -440,14 +487,17 @@
 		el: '#container',
 		//create the template for the user profile
 		template: _.template(`
-        <div id="userProfile" style="color: #fff;">
+        <div id="userProfile" class="profile-container">
             <h2>User Profile</h2>
-            <p>Username: <%= username %></p>
-            <p>Email: <%= email %></p>
-            <p>First Name: <%= first_name %></p>
-            <p>Last Name: <%= last_name %></p>
-            <p>User ID: <%= id %></p>
-            <p>Profile created on: <%= created_at %></p>
+            <div class="profile-picture">
+                <i class="fas fa-user user-icon"></i>
+            </div>
+            <p><strong>Username:</strong> <%= username %></p>
+            <p><strong>Email:</strong> <%= email %></p>
+            <p><strong>First Name:</strong> <%= first_name %></p>
+            <p><strong>Last Name:</strong> <%= last_name %></p>
+            <p><strong>User ID:</strong> <%= id %></p>
+            <p><strong>Profile created on:</strong> <%= created_at %></p>
         </div>
     `),
 		initialize: function(options) {
