@@ -9,15 +9,18 @@ class Home_controller extends CI_Controller {
 		$this->load->library('session');
 	}
 
+	//load the home page
 	public function index() {
 		if (!$this->session->userdata('user_id')) {
 			redirect('/');
 		}
 
+		//get the posts from model and load into view
 		$data['posts'] = $this->Home_model->get_posts();
 		$this->load->view('home_view', $data);
 	}
 
+	//send the post details to model
 	public function submit_post() {
 		$this->_set_cors_headers();
 
@@ -31,6 +34,7 @@ class Home_controller extends CI_Controller {
 				$config['allowed_types'] = 'gif|jpg|jpeg|png';
 				$this->load->library('upload', $config);
 
+				//move the uploaded image to local directory
 				if ($this->upload->do_upload('postImage')) {
 					$postImage = 'http://localhost/CW/uploads/' . $this->upload->data('file_name');
 				}
@@ -55,12 +59,14 @@ class Home_controller extends CI_Controller {
 		}
 	}
 
+	//retrieve all posts from model
 	public function get_posts() {
 		$this->_set_cors_headers();
 		$posts = $this->Home_model->get_posts();
 		echo json_encode(array('success' => true, 'posts' => $posts));
 	}
 
+	//get posts from model based on keyword
 	public function search_posts() {
 		$this->_set_cors_headers();
 		if ($this->input->server('REQUEST_METHOD') == 'GET') {
@@ -72,17 +78,20 @@ class Home_controller extends CI_Controller {
 		}
 	}
 
+	//send upvote request to model
 	public function upvote_post() {
 		$this->_set_cors_headers();
 		if ($this->input->server('REQUEST_METHOD') == 'POST') {
 			$post_id = $this->input->post('post_id');
 			$updated_upvotes = $this->Home_model->upvote_post($post_id);
+			//retrieve updated upvotes from model to update view in real time
 			echo json_encode(array('success' => true, 'message' => 'Post upvoted', 'updated_upvotes' => $updated_upvotes));
 		} else {
 			echo json_encode(array('success' => false, 'message' => 'Invalid request'));
 		}
 	}
 
+	//send comment to model
 	public function add_comment() {
 		$this->_set_cors_headers();
 		if ($this->input->server('REQUEST_METHOD') == 'POST' && $this->session->userdata('user_id')) {
@@ -107,6 +116,7 @@ class Home_controller extends CI_Controller {
 		}
 	}
 
+	//reset the session data and go back to welcome page
 	public function logout() {
 		$this->session->unset_userdata('user_id');
 		$this->session->unset_userdata('username');
@@ -124,7 +134,7 @@ class Home_controller extends CI_Controller {
 		header('Access-Control-Allow-Headers: Content-Type, Authorization');
 		header('Access-Control-Allow-Credentials: true');
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-			exit; // Return immediately to handle preflight
+			exit;
 		}
 	}
 }

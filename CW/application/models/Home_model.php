@@ -8,18 +8,22 @@ class Home_model extends CI_Model {
 		$this->load->database();
 	}
 
+	//insert the post data into the database
 	public function insert_post($data) {
 		return $this->db->insert('posts', $data);
 	}
 
+	//retrieves posts from the database
 	public function get_posts() {
 		$this->db->select('posts.*, users.username, posts.up_votes');
 		$this->db->from('posts');
 		$this->db->join('users', 'posts.user_id = users.id');
+		//order based on created time
 		$this->db->order_by('posts.created_at', 'DESC');
 		$query = $this->db->get();
 		$posts = $query->result_array();
 
+		//assign comments to the respective posts
 		foreach ($posts as &$post) {
 			$post['comments'] = $this->get_comments($post['post_id']);
 		}
@@ -27,6 +31,7 @@ class Home_model extends CI_Model {
 		return $posts;
 	}
 
+	//retrieve posts based on user searched keyword
 	public function search_posts($query) {
 		$this->db->select('posts.*, users.username, posts.up_votes');
 		$this->db->from('posts');
@@ -45,6 +50,7 @@ class Home_model extends CI_Model {
 		return $posts;
 	}
 
+	//increment the upvotes value in the database by one
 	public function upvote_post($post_id) {
 		$this->db->set('up_votes', 'up_votes+1', FALSE);
 		$this->db->where('post_id', $post_id);
@@ -54,10 +60,12 @@ class Home_model extends CI_Model {
 		return $updated_upvotes;
 	}
 
+	//inserts comment into database
 	public function insert_comment($data) {
 		return $this->db->insert('comments', $data);
 	}
 
+	//retrieve comments based on user and post id
 	public function get_comments($post_id) {
 		$this->db->select('comments.*, users.username');
 		$this->db->from('comments');

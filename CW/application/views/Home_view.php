@@ -136,7 +136,7 @@
 			overflow: hidden;
 			margin: 10px;
 			border: 3px solid #33b249;
-			display: none; /* Initially hide the container */
+			display: none;
 			justify-content: center;
 			align-items: center;
 			background: #000;
@@ -184,11 +184,14 @@
 </head>
 <body>
 
+
 <div id="nav">
+	<!--search field to filter content based on keyword-->
 	<div class="nav-middle">
 		<input type="text" id="searchInput" placeholder="Search posts...">
 		<button id="searchButton"><i class="fas fa-search"></i> Search</button>
 	</div>
+	<!--buttons to go to user profile or logout-->
 	<div class="nav-buttons">
 		<a href="http://localhost/CW/index.php/home_controller/user_profile"><i class="fas fa-user"></i>Profile</a>
 		<a href="http://localhost/CW/index.php/home_controller/logout"><i class="fas fa-sign-out-alt"></i>Logout</a>
@@ -198,9 +201,11 @@
 <div id="container">
 	<div id="postForm">
 		<h2>Create a Post</h2>
+		<!--gives user form fields to create a post-->
 		<form id="createPostForm">
 			<textarea name="postText" placeholder="What are you up to?" required></textarea>
 			<textarea name="gameName" placeholder="What game are you playing?" required></textarea>
+			<!--preview image when uploaded-->
 			<div id="imagePreviewContainer">
 				<img id="imagePreview" />
 			</div>
@@ -209,6 +214,7 @@
 		</form>
 	</div>
 
+	<!--container to load posts-->
 	<div id="postsContainer">
 		<h2>Recent Posts</h2>
 		<div id="posts"></div>
@@ -217,16 +223,18 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+	//make sure the page is fully loaded
 	$(document).ready(function() {
-		// Load posts initially
+		//initially load the posts
 		loadPosts();
 
-		// Event delegation for dynamic elements
+		//trigger the controller method to vote
 		$('#posts').on('click', '.vote-up', function() {
 			var postId = $(this).data('post-id');
 			upvotePost(postId, $(this));
 		});
 
+		//adds comment to relevant post based on post id
 		$('#posts').on('submit', '.comment-form', function(event) {
 			event.preventDefault();
 			var postId = $(this).data('post-id');
@@ -238,6 +246,7 @@
 			event.preventDefault();
 
 			var formData = new FormData(this);
+			//create and send the AJAX request with post details
 			$.ajax({
 				type: 'POST',
 				url: 'http://localhost/CW/index.php/home_controller/submit_post',
@@ -249,9 +258,11 @@
 						var res = JSON.parse(response);
 						if (res.success) {
 							alert('Post submitted successfully!');
+							//reset the form fields and hide the image preview container
 							$('#createPostForm')[0].reset();
-							$('#imagePreview').attr('src', ''); // Clear the image preview
-							$('#imagePreviewContainer').hide(); // Hide the image preview container
+							$('#imagePreview').attr('src', '');
+							$('#imagePreviewContainer').hide();
+							//if successful reload the posts
 							loadPosts();
 						} else {
 							alert('Failed to submit post: ' + res.message);
@@ -270,18 +281,21 @@
 			});
 		});
 
+		//on click send the keyword to searchPosts function
 		$('#searchButton').click(function() {
 			var query = $('#searchInput').val();
 			searchPosts(query);
 		});
 
 		function loadPosts() {
+			//retrieve the posts using AJAX
 			$.ajax({
 				url: 'http://localhost/CW/index.php/home_controller/get_posts',
 				type: 'GET',
 				success: function(response) {
 					var res = JSON.parse(response);
 					if (res.success) {
+						//if posts are successfully, retrieved display them
 						displayPosts(res.posts);
 					} else {
 						$('#posts').html('<p>No posts found.</p>');
@@ -294,6 +308,7 @@
 		}
 
 		function searchPosts(query) {
+			//retrieve the posts based on user search keyword
 			$.ajax({
 				url: 'http://localhost/CW/index.php/home_controller/search_posts',
 				type: 'GET',
@@ -301,6 +316,7 @@
 				success: function(response) {
 					var res = JSON.parse(response);
 					if (res.success) {
+						//if posts successfully retrieved, display them
 						displayPosts(res.posts);
 					} else {
 						$('#posts').html('<p>No posts found for your search.</p>');
@@ -313,6 +329,7 @@
 		}
 
 		function displayPosts(posts) {
+			//create html content for each post
 			var postsHtml = '';
 			posts.forEach(function(post) {
 				postsHtml += '<div class="post">';
@@ -325,8 +342,9 @@
 				postsHtml += '<div class="actions">';
 				postsHtml += '<button class="vote-up" data-post-id="' + post.post_id + '"><i class="fas fa-thumbs-up"></i></button>';
 				postsHtml += '<span class="upvotes-count"> Upvotes: ' + post.up_votes + '</span>';
-				postsHtml += '</div>'; // Close actions div
+				postsHtml += '</div>';
 				postsHtml += '<div class="comments" id="comments-' + post.post_id + '">';
+				//populate each post with its respective commments
 				post.comments.forEach(function(comment) {
 					postsHtml += '<div class="comment">';
 					postsHtml += '<p><strong>' + comment.username + ':</strong> ' + comment.comment_text + '</p>';
@@ -336,13 +354,15 @@
 				postsHtml += '<textarea name="commentText" placeholder="Add a comment..." required></textarea>';
 				postsHtml += '<input type="submit" value="Comment">';
 				postsHtml += '</form>';
-				postsHtml += '</div>'; // Close comments div
-				postsHtml += '</div>'; // Close post div
+				postsHtml += '</div>';
+				postsHtml += '</div>';
 			});
+			//populate the div section with created html content
 			$('#posts').html(postsHtml);
 		}
 
 		function upvotePost(postId, button) {
+			//send AJAX request to upvote post
 			$.ajax({
 				url: 'http://localhost/CW/index.php/home_controller/upvote_post',
 				type: 'POST',
@@ -350,6 +370,7 @@
 				success: function(response) {
 					var res = JSON.parse(response);
 					if (res.success) {
+						//if successful, update the votes count in real time
 						var upvotesCountElement = button.siblings('.upvotes-count');
 						upvotesCountElement.text('Upvotes: ' + res.updated_upvotes);
 						button.find('i').css('color', '#5865F2');
@@ -364,6 +385,7 @@
 		}
 
 		function addComment(postId, commentText) {
+			//send AJAX request to add comment to the respective post
 			$.ajax({
 				url: 'http://localhost/CW/index.php/home_controller/add_comment',
 				type: 'POST',
@@ -371,7 +393,8 @@
 				success: function(response) {
 					var res = JSON.parse(response);
 					if (res.success) {
-						loadPosts(); // Reload posts to show the new comment
+						//if comment added successfully added, reload the posts
+						loadPosts();
 					} else {
 						alert('Failed to add comment: ' + res.message);
 					}
@@ -383,12 +406,14 @@
 		}
 	});
 
+	//preview the user uploaded post image in a container
 	function previewImage(event) {
 		var reader = new FileReader();
 		reader.onload = function() {
 			var output = document.getElementById('imagePreview');
 			output.src = reader.result;
-			$('#imagePreviewContainer').show(); // Show the image preview container
+			//once loaded, show the container which is hidden by default
+			$('#imagePreviewContainer').show();
 		}
 		reader.readAsDataURL(event.target.files[0]);
 	}

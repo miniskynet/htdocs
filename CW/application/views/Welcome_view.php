@@ -171,6 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 <div id="container">
+	<!--display the welcome message-->
 	<div id="sectionLeft">
 		<div id="panel">
 			<h3>Welcome to Gamers United! Dive into a vibrant community of gamers from around the world.
@@ -186,6 +187,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					Join Gamers United today and become part of a dynamic and inclusive network where every gamer has a place.</h3><br>
 		</div>
 	</div>
+	<!--display the user login and signup forms-->
 	<div id="sectionRight">
 		<div id="subsection">
 			<form id="loginForm" name="loginForm">
@@ -238,9 +240,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script>
 	$(document).ready(function() {
 		$('#signupForm').submit(function(event) {
-			event.preventDefault(); // Prevent form submission
+			//prevents the form from being submitted
+			event.preventDefault();
 
-			// Collect form data
+			//collect user input data
 			var formData = {
 				fname: $('#fname').val(),
 				lname: $('#lname').val(),
@@ -250,23 +253,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				email: $('#email').val()
 			};
 
-			// Client-side validation
+			//make sure all the forms are filled out
 			if (!formData.fname || !formData.lname || !formData.usernameSignup || !formData.passSignup || !formData.passConfirm || !formData.email) {
 				alert('All fields are required.');
 				return;
 			}
 
+			//check if email is valid
 			if (!validateEmail(formData.email)) {
 				alert('Please enter a valid email address.');
 				return;
 			}
 
+			//check if password and password confirmation inputs are matching
 			if (formData.passSignup !== formData.passConfirm) {
 				alert('Passwords do not match.');
 				return;
 			}
 
-			// Send data to the server
+			//send user data to the controller
 			$.ajax({
 				type: 'POST',
 				url: 'http://localhost/CW/index.php/welcome_controller/signup',
@@ -275,6 +280,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 					var res = JSON.parse(response);
 					if(res.success) {
 						alert('Signup successful!');
+						//resets the form after submission
 						$('#signupForm')[0].reset();
 					} else {
 						alert('Signup failed: ' + res.message);
@@ -288,6 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	});
 
 	function validateEmail(email) {
+		//uses simple email validation regex
 		var re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 		return re.test(String(email).toLowerCase());
 	}
@@ -295,6 +302,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	$('#loginForm').submit(function(event) {
 		event.preventDefault();
 
+		//send login details to the controller
 		var formData = $(this).serialize();
 		$.ajax({
 			type: 'POST',
@@ -304,6 +312,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				var res = JSON.parse(response);
 				if (res.success) {
 					alert('Login successful!');
+					//if username and password are matching navigate to the home page
 					window.location.href = 'http://localhost/CW/index.php/welcome_controller/home';
 				} else {
 					alert('Login failed: ' + res.message);
@@ -315,6 +324,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		});
 	});
 
+	//previews the profile picture when an image is uploaded
 	function previewImage(event) {
 		var reader = new FileReader();
 		reader.onload = function() {
